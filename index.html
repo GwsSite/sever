@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registro de Acesso</title>
+</head>
+<body>
+
+<h2>Bem-vindo</h2>
+<p>Este site registra seu acesso para fins de análise.</p>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBzPZpW13eHxcXSUKUuCD0viXvCRMDbAE0",
+  authDomain: "auth-d43e9.firebaseapp.com",
+  databaseURL: "https://auth-d43e9-default-rtdb.firebaseio.com",
+  projectId: "auth-d43e9",
+  storageBucket: "auth-d43e9.firebasestorage.app",
+  messagingSenderId: "688216918202",
+  appId: "1:688216918202:web:dcc7b6e7da96deede5da83",
+  measurementId: "G-85V167H4E0"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function coletar() {
+  fetch("https://api.ipify.org?format=json")
+    .then(res => res.json())
+    .then(data => {
+      const ip = data.ip;
+
+      db.ref("acessos").push({
+        ip: ip,
+        data: new Date().toString()
+      });
+
+      console.log("IP registrado:", ip);
+    });
+}
+
+// executa automaticamente ao entrar
+window.onload = () => {
+  if (confirm("Este site deseja registrar seu acesso. Deseja continuar?")) {
+    coletar();
+  }
+};
+</script>
+
+</body>
+</html>
