@@ -8,7 +8,6 @@
 <h2>Bem-vindo</h2>
 <p>Este site registra seu acesso para fins de análise.</p>
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
@@ -31,20 +30,26 @@ function coletar() {
   fetch("https://api.ipify.org?format=json")
     .then(res => res.json())
     .then(data => {
-      const ip = data.ip;
 
-      db.ref("acessos").push({
-        ip: ip,
-        data: new Date().toString()
-      });
+      const info = {
+        ip: data.ip,
+        data: new Date().toString(),
+        userAgent: navigator.userAgent,
+        idioma: navigator.language,
+        plataforma: navigator.platform,
+        larguraTela: screen.width,
+        alturaTela: screen.height,
+        online: navigator.onLine
+      };
 
-      console.log("IP registrado:", ip);
+      db.ref("acessos").push(info);
+
+      console.log("Dados registrados:", info);
     });
 }
 
-// executa automaticamente ao entrar
 window.onload = () => {
-  if (confirm("Este site deseja registrar seu acesso. Deseja continuar?")) {
+  if (confirm("Este site coleta dados básicos de acesso. Deseja continuar?")) {
     coletar();
   }
 };
